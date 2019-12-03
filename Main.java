@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -11,7 +12,7 @@ public class Main {
     static Hashtable<String, Integer> intTable = new Hashtable<String, Integer>(); //holds variables contents
     static Hashtable<String, Integer> varOffsetTable = new Hashtable<String, Integer>(); //holds var's offset
     static Hashtable<Integer, String> offsetVarTable = new Hashtable<Integer, String>();
-    static ArrayList<Integer> stack = new ArrayList<Integer>(); 
+    static ArrayList<Integer> stack = new ArrayList<Integer>();
     public static void reader(String fileName){
         BufferedReader br = null;
         ArrayList<byte[]> list = new ArrayList<byte[]>();
@@ -63,6 +64,10 @@ public class Main {
                 else if(statement.equals("popm")){
                     popm(list, tokens[1]);
                 }
+                else if(statement.equals("jmp"))
+                    jmp(list, tokens[1]);
+                else if(statement.equals("jmpc"))
+                    jmpc(list, tokens[1]);
             }
             printList(list);
         } catch (final IOException e) {
@@ -83,7 +88,7 @@ public class Main {
         byte[]opCode2 = {0};
         addOpCode(list, opCode2);
     }
-    
+
     public static void printi(ArrayList<byte[]> list, String value){
         pushi(list, value);
         //146 printi
@@ -103,13 +108,13 @@ public class Main {
 
         stack.add(value);
         varLoc++;
-   }
+    }
 
     //for pushing integers on stack and not adding to table
     public static void pushi(ArrayList<byte[]> list, String value){
-         //70 pushi
-         byte[] opCode = {70};
-         addOpCode(list, opCode);
+        //70 pushi
+        byte[] opCode = {70};
+        addOpCode(list, opCode);
 
         //add int 
         addInt(list, value);
@@ -123,16 +128,16 @@ public class Main {
         Integer val = intTable.get(name);
         stack.add(val);
         varLoc++;
-        
+
         byte[] opCode = {74}; // pushvi 74
         addOpCode(list, opCode);
     }
 
-    public static void popv(ArrayList<byte[]> list, String name){ 
+    public static void popv(ArrayList<byte[]> list, String name){
         //offset on stack
         Integer offsetVar = varOffsetTable.get(name);
         pushi(list, Integer.toString(offsetVar));
-        
+
         //set var equal to value in intTable
         Integer value = stack.get(varLoc -1);
         intTable.put(name, value);
@@ -158,23 +163,23 @@ public class Main {
     }
 
     public static void add(ArrayList<byte[]> list){
-        byte[] opCode = {100}; 
+        byte[] opCode = {100};
         addOpCode(list, opCode);
     }
     public static void sub(ArrayList<byte[]> list){
-        byte[] opCode = {104}; 
+        byte[] opCode = {104};
         addOpCode(list, opCode);
     }
     public static void mul(ArrayList<byte[]> list){
-        byte[] opCode = {108}; 
+        byte[] opCode = {108};
         addOpCode(list, opCode);
     }
     public static void div(ArrayList<byte[]> list){
-        byte[] opCode = {112}; 
+        byte[] opCode = {112};
         addOpCode(list, opCode);
     }
     public static void swp(ArrayList<byte[]> list){
-        byte[] opCode = {94}; 
+        byte[] opCode = {94};
         addOpCode(list, opCode);
     }
 
@@ -214,6 +219,20 @@ public class Main {
         varOffsetTable.put(name, offset);
         offsetVarTable.put(offset, name);
         offset++;
+    }
+
+    public static void jmp(ArrayList<byte[]> list, String value) {
+        pushi(list, value);
+        byte[] opCode = {36};
+        addOpCode(list, opCode);
+        pc++;
+    }
+
+    public static void jmpc(ArrayList<byte[]> list, String value) {
+        pushi(list, value);
+        byte[] opCode = {40};
+        addOpCode(list, opCode);
+        pc++;
     }
 
     public static void addOpCode(ArrayList<byte[]> list, byte[] opCode){
