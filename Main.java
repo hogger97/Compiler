@@ -11,6 +11,8 @@ public class Main {
     static Hashtable<String, Integer> intTable = new Hashtable<String, Integer>(); //holds variables contents
     static Hashtable<String, Integer> varOffsetTable = new Hashtable<String, Integer>(); //holds var's offset
     static Hashtable<Integer, String> offsetVarTable = new Hashtable<Integer, String>();
+    static Hashtable<String, Integer> labTable = new Hashtable<String, Integer>();
+    static Hashtable<String, ArrayList<Integer>> labFix = new Hashtable<String, ArrayList<Integer>>();
     static ArrayList<Integer> stack = new ArrayList<Integer>(); 
     public static void reader(String fileName){
         BufferedReader br = null;
