@@ -288,6 +288,10 @@ public class Main {
         byte[] opCode = {40};
         addOpCode(list, opCode);
     }
+    
+    public static void lab(ArrayList<byte[]> list, String name){
+        labTable.put(name, pc);
+    }
 
     public static void addOpCode(ArrayList<byte[]> list, byte[] opCode){
         String preCode = String.format("%02x", opCode[0]);
